@@ -31,4 +31,16 @@ export class UserController {
         code: 200
       }
   }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    await this.userValidator.id(id);
+    return await this.userService.delete(id);
+  }
+
+  @Get('get-users')
+  async get() {
+    const users = await this.userService.get();
+    return users;
+  }
 }
