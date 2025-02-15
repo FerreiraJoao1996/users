@@ -38,9 +38,9 @@ export class UserController {
     return await this.userService.delete(id);
   }
 
-  @Get('get-users')
+  @Get()
   async get() {
     const users = await this.userService.get();
-    return users;
+    return {users};
   }
 }

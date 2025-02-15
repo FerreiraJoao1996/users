@@ -14,6 +14,7 @@ export class UserService {
     const user = await this.userRepository.create(body);
     await this.userRepository.save(user);
     return {
+      code: 200,
       user
     };
   }
@@ -43,6 +44,8 @@ export class UserService {
   }
 
   async get() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      select: ['id', 'name', 'company_value', 'salary']
+    });
   }
 }
