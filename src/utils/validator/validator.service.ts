@@ -1,22 +1,23 @@
 import { BadRequestException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 export class ValidatorFieldService {
-  private request: any;
+  private request: Record<string, unknown>;
   private rules: Record<string, string>;
 
-  constructor(request: any, rules: Record<string, string>) {
+  constructor(request: Record<string, any>, rules: Record<string, string>) {
     this.request = request;
     this.rules = rules;
   }
 
   async validation(): Promise<void> {
-    const errors: Record<string, any> = {};
+    const errors: Record<string, { message: string; rule: string }> = {};
 
     for (const [field, rule] of Object.entries(this.rules)) {
+      const value = await this.request[field];
+
       if (
         rule.includes('required') &&
-        (!this.request[field] || this.request[field].trim() === '')
+        (typeof value !== 'string' || value.trim() === '')
       ) {
         errors[field] = {
           message: `${field} field must not be empty.`,
@@ -29,5 +30,4 @@ export class ValidatorFieldService {
       throw new BadRequestException({ code: 400, errors });
     }
   }
-
 }

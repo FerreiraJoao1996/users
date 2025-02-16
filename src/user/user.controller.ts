@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { UserValidator } from './user.validator';
@@ -8,11 +17,12 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userValidator: UserValidator,
-  ) { }
+  ) {}
 
-  @Post("create")
+  @Post('create')
   async create(@Body() body: UserDto) {
-    if (!body || Object.values(body).length === 0) throw new BadRequestException("Request cannot be empty!");
+    if (!body || Object.values(body).length === 0)
+      throw new BadRequestException('Request cannot be empty!');
 
     await this.userValidator.create(body);
     return await this.userService.create(body);
@@ -20,16 +30,17 @@ export class UserController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() body: UserDto) {
-    if (!body || Object.values(body).length === 0) throw new BadRequestException("Request cannot be empty!");
+    if (!body || Object.values(body).length === 0)
+      throw new BadRequestException('Request cannot be empty!');
 
     await this.userValidator.update(id, body);
     const userUpdated = await this.userService.update(Number(id), body);
 
     if (userUpdated)
       return {
-        message: "User updated with success!",
-        code: 200
-      }
+        message: 'User updated with success!',
+        code: 200,
+      };
   }
 
   @Delete(':id')
@@ -41,6 +52,6 @@ export class UserController {
   @Get()
   async get() {
     const users = await this.userService.get();
-    return {users};
+    return { users };
   }
 }

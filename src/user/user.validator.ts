@@ -13,11 +13,11 @@ export class UserValidator {
     await validatorField.validation();
   }
 
-  async update(id: string ,body: UserDto): Promise<void> {
+  async update(id: string, body: UserDto): Promise<void> {
     const validatorField = new ValidatorFieldService(body, {
-        name: 'required|string',
-        salary: 'required|string',
-        company_value: 'required|string',
+      name: 'required|string',
+      salary: 'required|string',
+      company_value: 'required|string',
     });
     await validatorField.validation();
 
@@ -25,9 +25,12 @@ export class UserValidator {
   }
 
   async id(id: string): Promise<void> {
-    const validatorQuery = new ValidatorFieldService({id}, {
-      id: 'required|string',
-    });
+    const validatorQuery = new ValidatorFieldService(
+      { id },
+      {
+        id: 'required|string',
+      },
+    );
     await validatorQuery.validation();
   }
 }

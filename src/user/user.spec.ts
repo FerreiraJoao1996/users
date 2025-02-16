@@ -7,21 +7,25 @@ import { UserDto } from './dto/user.dto';
 
 describe('UserController', () => {
   let userController: UserController;
-  let userService: UserService;
+  // let userService: UserService;
 
   const mockUserService = {
     create: jest.fn().mockImplementation((dto: UserDto) => ({
       user: { id: 1, ...dto, createdAt: new Date(), updatedAt: new Date() },
     })),
-    update: jest.fn().mockImplementation((id: number, dto: UserDto) => {
+    update: jest.fn().mockImplementation((id: number) => {
       if (id !== 1) throw new NotFoundException('User not found!');
       return { affected: 1 };
     }),
     delete: jest.fn().mockImplementation((id: string) => {
       if (id !== '1') throw new NotFoundException('User not found!');
-      return { message: "User deleted with success.", code: 200 };
+      return { message: 'User deleted with success.', code: 200 };
     }),
-    get: jest.fn().mockResolvedValue([{ id: 1, name: 'John', salary: '5000', company_value: '10000' }]),
+    get: jest
+      .fn()
+      .mockResolvedValue([
+        { id: 1, name: 'John', salary: '5000', company_value: '10000' },
+      ]),
   };
 
   const mockUserValidator = {
@@ -40,12 +44,16 @@ describe('UserController', () => {
     }).compile();
 
     userController = module.get<UserController>(UserController);
-    userService = module.get<UserService>(UserService);
+    // const userService: UserService = module.get<UserService>(UserService);
   });
 
   describe('Create User', () => {
     it('should create a user successfully', async () => {
-      const dto: UserDto = { name: 'John Doe', salary: '5000', company_value: '10000' };
+      const dto: UserDto = {
+        name: 'John Doe',
+        salary: '5000',
+        company_value: '10000',
+      };
       const result = await userController.create(dto);
 
       expect(result).toHaveProperty('user');
@@ -53,11 +61,17 @@ describe('UserController', () => {
     });
 
     it('should throw BadRequestException if body is empty', async () => {
-      await expect(userController.create({} as UserDto)).rejects.toThrow(BadRequestException);
+      await expect(userController.create({} as UserDto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should call validator before creating a user', async () => {
-      const dto: UserDto = { name: 'John Doe', salary: '5000', company_value: '10000' };
+      const dto: UserDto = {
+        name: 'John Doe',
+        salary: '5000',
+        company_value: '10000',
+      };
       await userController.create(dto);
 
       expect(mockUserValidator.create).toHaveBeenCalledWith(dto);
@@ -66,24 +80,43 @@ describe('UserController', () => {
 
   describe('Update User', () => {
     it('should update user successfully', async () => {
-      const dto: UserDto = { name: 'Updated Name', salary: '6000', company_value: '12000' };
+      const dto: UserDto = {
+        name: 'Updated Name',
+        salary: '6000',
+        company_value: '12000',
+      };
       const result = await userController.update('1', dto);
 
-      expect(result).toEqual({ message: "User updated with success!", code: 200 });
+      expect(result).toEqual({
+        message: 'User updated with success!',
+        code: 200,
+      });
     });
 
     it('should throw NotFoundException if user does not exist', async () => {
-      const dto: UserDto = { name: 'Updated Name', salary: '6000', company_value: '12000' };
+      const dto: UserDto = {
+        name: 'Updated Name',
+        salary: '6000',
+        company_value: '12000',
+      };
 
-      await expect(userController.update('999', dto)).rejects.toThrow(NotFoundException);
+      await expect(userController.update('999', dto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw BadRequestException if body is empty', async () => {
-      await expect(userController.update('1', {} as UserDto)).rejects.toThrow(BadRequestException);
+      await expect(userController.update('1', {} as UserDto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should call validator before updating', async () => {
-      const dto: UserDto = { name: 'Updated Name', salary: '6000', company_value: '12000' };
+      const dto: UserDto = {
+        name: 'Updated Name',
+        salary: '6000',
+        company_value: '12000',
+      };
       await userController.update('1', dto);
 
       expect(mockUserValidator.update).toHaveBeenCalledWith('1', dto);
@@ -93,11 +126,16 @@ describe('UserController', () => {
   describe('Delete User', () => {
     it('should delete a user successfully', async () => {
       const result = await userController.delete('1');
-      expect(result).toEqual({ message: "User deleted with success.", code: 200 });
+      expect(result).toEqual({
+        message: 'User deleted with success.',
+        code: 200,
+      });
     });
 
     it('should throw NotFoundException if user does not exist', async () => {
-      await expect(userController.delete('999')).rejects.toThrow(NotFoundException);
+      await expect(userController.delete('999')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should call validator before deleting', async () => {

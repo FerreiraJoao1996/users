@@ -1,5 +1,5 @@
 export class ValidatorFieldException extends Error {
-  constructor(e) {
+  constructor(e: string | undefined) {
     super(e);
   }
 }
