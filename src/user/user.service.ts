@@ -15,7 +15,11 @@ export class UserService {
     await this.userRepository.save(user);
     return {
       code: 200,
-      user,
+      user: {
+        name: user.name,
+        salary: user.salary,
+        company_value: user.company_value,
+      },
     };
   }
 
