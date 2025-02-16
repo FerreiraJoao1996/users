@@ -21,12 +21,17 @@
    DB_NAME=seudatabase
    ```
 
-3. Caso encontre um problema de pasta ao executar, onde a solução para executar as migrations é buildar o projeto, execute os seguintes comandos:
+3. Executando Migrations
 
-   ```bash
-   npm tsc
-   npx typeorm migration:run --dataSource dist/database/data-source.js
-   ```
+No meu caso, ocorreu um problema de pastas onde a solução foi encontrada neste link: [Stack Overflow - NestJS TypeORM Migration Error](https://stackoverflow.com/questions/72580969/nestjs-typeorm-error-during-migration-run-unable-to-open-file).
+
+```bash
+npx tsc
+npx typeorm migration:show --dataSource dist/database/data-source.js  # Visualizar migrations pendentes
+npx typeorm migration:revert --dataSource dist/database/data-source.js  # Reverter última migration, se necessário
+npx typeorm migration:run --dataSource dist/database/data-source.js  # Executar migrations
+```
+
 
 4. Por fim, execute o comando para iniciar o projeto:
 
