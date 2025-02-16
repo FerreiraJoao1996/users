@@ -16,7 +16,7 @@
    ```env
    DB_HOST=seuhost    # Geralmente, em uso local, usamos localhost
    DB_PORT=5432
-   DB_USER="postgres"
+   DB_USER="seuusuario
    DB_PASSWORD=suasenha
    DB_NAME=seudatabase
    ```
