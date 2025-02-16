@@ -7,7 +7,6 @@ import { UserDto } from './dto/user.dto';
 
 describe('UserController', () => {
   let userController: UserController;
-  // let userService: UserService;
 
   const mockUserService = {
     create: jest.fn().mockImplementation((dto: UserDto) => ({
@@ -44,7 +43,6 @@ describe('UserController', () => {
     }).compile();
 
     userController = module.get<UserController>(UserController);
-    // const userService: UserService = module.get<UserService>(UserService);
   });
 
   describe('Create User', () => {
@@ -147,14 +145,15 @@ describe('UserController', () => {
   describe('Get Users', () => {
     it('should return a list of users', async () => {
       const result = await userController.get();
-      expect(result).toHaveLength(1);
-      expect(result[0]).toHaveProperty('name', 'John');
+      console.log('result: ', result);
+      expect(result.users).toHaveLength(1);
+      expect(result.users[0]).toHaveProperty('name', 'John');
     });
 
     it('should return an empty array if no users found', async () => {
       mockUserService.get.mockResolvedValueOnce([]);
       const result = await userController.get();
-      expect(result).toEqual([]);
+      expect(result).toEqual({ users: [] });
     });
   });
 });
